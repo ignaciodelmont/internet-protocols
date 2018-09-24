@@ -19,20 +19,17 @@ int main(int argc, char *argv[])
  struct hostent *he;
  struct sockaddr_in their_addr;
 
- if (argc != 2 )
- {
+ if (argc != 2 ) {
   fprintf(stderr, "usage: client hostname\n");
   exit(1);
  }
 
- if ((he=gethostbyname(argv[1])) == NULL)
- {
+ if ((he=gethostbyname(argv[1])) == NULL) {
   herror("gesthostbyname");
   exit(1);
  }
 
- if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
- {
+ if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
   perror("socket");
   exit(1);
  }
@@ -42,25 +39,25 @@ int main(int argc, char *argv[])
  their_addr.sin_addr   = *((struct in_addr *)he->h_addr);
  bzero(&(their_addr.sin_zero), 8);
 
- if (connect(sockfd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) == -1)
- {
+ if (connect(sockfd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) == -1) {
   perror("connect");
   exit(1);
  }
 
-while(1)
-{
- if ((numbytes=recv(sockfd, buf, MAXDATASIZE, 0)) == -1)
- {
+while(1) {
+
+ if ((numbytes=recv(sockfd, buf, MAXDATASIZE, 0)) == -1) {
   perror("recv");
   exit(1);
  }
 
  buf[numbytes] = '\0';
 
- printf("Received: %s\n", buf);
- if (send(sockfd, "Respuesta!\n", 12, 0) == -1) perror("send");
- else printf("Enviado\n");
+ printf("\nReceived: %s\n", buf);
+ if (strcmp(buf, "bye\n") == 0) {
+   close(sockfd);
+   break;
+ }
 }
  close(sockfd);
 
