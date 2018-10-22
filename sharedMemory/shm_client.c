@@ -31,6 +31,8 @@ main()
         exit(1);
     }
 
+    t_nodo arr = [port, shm]
+
     // chat loop, the server should start sending messages
     // it end when either side sends the message "bye"
     while (1) {
